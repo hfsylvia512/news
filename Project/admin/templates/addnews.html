@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>新闻发布</title>
+    <meta charset="UTF-8">
+    <script src="../scripts/jquery-1.10.0.min.js"></script>
+    <script src="../kindeditor/kindeditor.js"></script>
+    <script>
+      var editor;//编辑对象
+      //加载编辑器
+      KindEditor.ready(function(e){
+        //创建编辑器
+        editor = e.create("[name=content]",{
+              width:"1100px",
+              height:"400px"
+              
+        });
+      });
+      //验证
+      function newsAdd(){
+        if(document.frm.title.value == ""){
+          alert("请输入标题");
+          document.frm.title.focus();
+          return false;
+        }else if(editor.html() == ""){
+          alert("请输入新闻内容");
+          editor.focus();
+          return false;
+        }else{
+          document.frm.content.value = editor.html();
+          //提交表单
+          document.frm.submit();
+        }
+      }
+    </script>
+  </head>
+  <body>
+      <form action="addnews.php" method="post" name="frm" onsubmit="return newsAdd()" enctype="multipart/form-data">
+        <table border="1" align="center">
+          <tr>
+            <td>标题</td>
+            <td><input type="text" name="title" size="50"></td>
+          </tr>
+          <tr>
+            <td>分类</td>
+            <td width="200px">
+              <select name="typeId" >
+              {foreach $NewsTypes as $v}
+              {if $v.level==1}
+                <option value="{$v.typeId}">{$v.typeName}</option>
+                {foreach $NewsTypes as $vv}
+                {if $vv.pid==$v.typeId}
+                  <option value="{$vv.typeId}">&nbsp;&nbsp;{$vv.typeName}</option>
+                {/if}
+                {/foreach}
+              {/if}
+              {/foreach}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>新闻图片</td>
+            <td><input type="file" name="myFile"></td>
+          </tr>
+          <tr>
+            <td>内容</td>
+            <td><textarea name="content" ></textarea></td>
+          </tr>
+          <tr>
+            <td>
+              <td colspan="2" align="center">
+          <input type="submit" value="发表文章">
+          &nbsp;&nbsp;&nbsp;
+          <input type="reset" value="全部重写">
+            </td>
+          </tr>
+        </table>
+      </form>
+  </body>
+</html>

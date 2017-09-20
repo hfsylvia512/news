@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>分类列表</title>
+    <meta charset="UTF-8">
+    <script>
+    // 删除某一分类
+    function delType(typeId){
+      if(confirm("是否删除该分类?")){
+        window.location = "listtype.php?typeId="+typeId;
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <table border="1" align="center" width="600">
+      <tr>
+        <td>分类编号</td>
+        <td>分类名称</td>
+        <td>操作</td>
+      </tr>
+      {foreach $NewsTypes as $v}
+      <!-- 显示所有的一级分类 -->
+      {if $v.level==1}
+      <tr>
+        <td>{$v.typeId}</td>
+        <td>{$v.typeName}</td>
+
+        <td><input type="button" value="删除" onclick="delType({$v.typeId})"></td>
+      </tr>
+      <!-- 显示当前分类所有子菜单 -->
+      {foreach $NewsTypes as $vv}
+      <!-- 当前分类，是上边那个分类是子菜单 -->
+        {if $vv.pid == $v.typeId}
+          <tr>
+        <td>{$vv.typeId}</td>
+        <td>&nbsp;&nbsp;&nbsp;{$vv.typeName}</td>
+
+        <td><input type="button" value="删除" onclick="delType({$vv.typeId})"></td>
+      </tr>
+        {/if}
+      {/foreach}
+      {/if}
+      {/foreach}
+    </table>
+  </body>
+</html>

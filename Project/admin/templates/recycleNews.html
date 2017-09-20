@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>回收列表</title>
+	<script>
+		function recycle(articleId){
+			window.location = "remove.php?articleId="+articleId;
+		}
+	</script>
+</head>
+<body>
+	<table border="1" width="900px" align="center">
+		<tr>
+			<th>编号</th>
+			<th>分类名称</th>
+			<th>新闻标题</th>
+			<th>发布时间</th>
+			<th>操作</th>
+		</tr>
+		{foreach $delnews as $v}
+		<tr>
+			<th>{$v.articleId}</th>
+			<th>{$v.typeName}</th>
+			<th>{$v.title}</th>
+			<th>{$v.dateandtime|date_format:"Y-m-d H:i:s"}</th>
+			<th>
+				<input type="button" value="回收" onclick="recycle({$v.articleId})">
+			</th>
+		</tr>
+		{/foreach}
+	</table>
+
+</body>
+</html>

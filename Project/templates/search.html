@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新闻视界_国内新闻</title>
+<link type="text/css" rel="stylesheet" media="all" href="styles/reset.css"/>
+<link type="text/css" rel="stylesheet" media="all" href="styles/layout.css"/>
+<link type="text/css" rel="stylesheet" media="all" href="styles/common.css"/>
+<script>
+	//文本框失去焦点，进行翻页
+	function changePage(currentPage){
+		if(!(/^\d+$/.test(currentPage))){
+			alert("只能是数字");
+			document.goto_page_num.focus();
+			return false;
+		}else if(1 <= currentPage ){
+		window.location = "search.php?keyword={$keyword}&currentPage="+currentPage;
+		}
+	}
+</script>
+</head>
+<body>
+<!-- 通用顶部导航开始-->
+{include file="header.html"}
+<!--导航结束-->
+<div class="section clear">
+	<div class="side-left-680">
+			
+		<div>
+		{foreach $search as $v}
+			<div class="news-list-item clear">
+			{if $v.imagepath == ""}
+				<div class="news-list-item-pic"><a href="news.php?articleId={$v.articleId}"><img src="images/logo.png" alt=""/></a></div>
+			{else}
+				<div class="news-list-item-pic"><a href="news.php?articleId={$v.articleId}"><img src="{$v.imagepath}" alt=""/></a></div>
+			{/if}
+				<div class="news-list-item-txt">
+					<h1><a href="news.php?articleId={$v.articleId}">{$v.title}</a></h1>
+					<p>{$v.content|strip_tags|truncate:100}</p>
+				</div>
+			</div>
+		{/foreach}			
+			<div class="page-list clear">
+			共{$totalPage}页
+			<!-- 上一页 -->
+			{if $currentPage == 1}
+			首页&nbsp;&nbsp;上一页
+			{else}
+				<a href="search.php?keyword={$keyword}&currentPage=1">首页</a>
+				<a href="search.php?keyword={$keyword}&currentPage={$currentPage-1}" class="pre">上一页</a>
+			
+			{/if}
+			<!-- 数字页码 -->
+			{for $i=1 to $totalPage}
+				<a href="search.php?keyword={$keyword}&currentPage={$i}">{$currentPage}</a>
+			{/for}
+			{if $currentPage == $totalPage}
+			下一页&nbsp;&nbsp;尾页
+			{else}
+				<a href="search.php?keyword={$keyword}&currentPage={$currentPage+1}" class="next">下一页</a>
+				<a href="search.php?keyword={$keyword}&currentPage={$totalPage}">尾页</a>
+			
+			{/if}
+				<input type="text" name="goto_page_num" id="goto-page-num" value="{$currentPage}" onblur="changePage(this.value)"/>
+			
+			</div>
+	  </div>
+	</div>
+</div>
+<!--版权区 start-->
+{include file="footer.html"}
+<!--版权区 end-->
+
+</body>
+</html>

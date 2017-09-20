@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>用户列表</title>
+</head>
+<body>
+	<table border="1" width="500px" align="center">
+		<tr>
+			<th>ID</th>
+			<th>姓名</th>
+			<th>邮箱</th>
+			<th>权限</th>
+			<th>注册时间</th>
+		</tr>
+		{foreach $userInfo as $v}
+		<tr>
+			<td>{$v.userId}</td>
+			<td>{$v.userName}</td>
+			<td>{$v.mailBox}</td>
+			<td>{$v.roleName}</td>
+			<td>{$v.dateandtime|date_format:"Y-m-d H:i:s"}</td>
+		</tr>
+		{/foreach}
+	</table>
+</body>
+</html>

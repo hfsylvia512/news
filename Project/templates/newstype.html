@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新闻视界_国内新闻</title>
+<link type="text/css" rel="stylesheet" media="all" href="styles/reset.css"/>
+<link type="text/css" rel="stylesheet" media="all" href="styles/layout.css"/>
+<link type="text/css" rel="stylesheet" media="all" href="styles/common.css"/>
+<script src="scripts/jquery-1.10.0.min.js"></script>
+<script>
+  var index=0;
+  
+  function changImg(){
+
+    $("#focus-image li").fadeOut(300);
+    $('#img'+index).fadeIn(300);
+    $("#focus-text li").fadeOut(300);
+    $("#txt"+index).fadeIn(300);
+    $("#focus-num li").removeClass("current");
+    $("#num"+index).addClass("current");
+    index++;
+    index = index>2?0:index;
+    window.setTimeout("changImg()",3000);
+  }
+  $(function(){
+      $('#focus-num>li').click(function(){         
+          $('#focus-image>li:visible').fadeOut(300);
+          $('#focus-image>li:eq('+ $(this).index() + ')').fadeIn(300);
+          $("#focus-text li:visible").fadeOut(300);
+          $('#focus-text li:eq('+$(this).index()+')').fadeIn(300);
+          $(this).addClass('current').siblings().removeClass('current');          
+        });
+  });
+  function changePage(currentPage){
+  	 //判断页码必须为整数：正则表达式
+  	 if(/^\d+$/.test(currentPage)){
+	  //判断页码必须是：1<=页码<总页数
+  	window.location = "newsType.php?typeId={$typeId}&currentPage="+currentPage;
+    }
+  }
+</script>
+</head>
+<body onload="changImg()">
+<!-- 网页的头 -->
+{include file="header.html"}
+
+<div class="section clear">
+  <div class="side-left-680">
+    <div id="focus-wrapper2">
+      <ul id="focus-image">
+        {foreach $Nimges as $k=>$v}
+        <li id="img{$k}"><a href="#"><img src="{$v.imagepath}" alt="" width="680px" height="320px"/></a></li>  
+        {/foreach}    
+      </ul>
+      <div id="focus-mask"></div>
+      <ul id="focus-text">
+      {foreach $Nimges as $k=>$v}
+        <li id="txt{$k}"><a href="#">{$v.title}</a></li>
+     {/foreach}
+      </ul>
+      <ol class="clear" id="focus-num">
+       < <li id="num0"class="current">1</li>
+        <li id="num1">2</li>
+        <li id="num2">3</li> 
+      </ol>    
+    </div>  
+    <div>
+      <!-- 每个新闻 -->
+      {foreach $newsInfo as $v}
+      <div class="news-list-item clear">
+      {if $v.imagepath !=''}
+        <div class="news-list-item-pic"><a href="#"><img src="{$v.imagepath}" alt=""/></a></div>
+        {else}
+          <div class="news-list-item-pic"><a href="#"><img src="images/logo.png" alt=""/></a></div>
+        {/if}
+        <div class="news-list-item-txt">
+          <h1><a href="news.php?articleId={$v.articleId}">{$v.title|strip_tags}</a></h1>
+          <p>{$v.content|truncate:100|strip_tags}</p>
+        </div>
+      </div>
+      {/foreach}
+      <!-- 分页栏 -->
+      <div class="page-list clear">
+      {if $currentPage != 1}
+        <a href="newstype.php?typeId={$typeId}&currentPage={$currentPage-1}" class="pre">&lt;</a>
+      {/if}
+        {for $i=1 to $totalPage}
+        <a id ="cl{$i}"href="newstype.php?typeId={$typeId}&currentPage={$i}">{$i}</a>
+        {/for}
+        {if $currentPage != $totalPage}
+        <a href="newstype.php?typeId={$typeId}&currentPage={$currentPage+1}" class="next">&gt;</a>
+        {/if}
+        <input type="text" name="goto-page-num" id="goto-page-num" value="{$currentPage}" onblur="changePage(this.value)"/>
+      </div>
+    </div>
+  </div>
+  <div class="side-right-300">
+    <h3 class="hot-title">24小时排行榜</h3>
+    <ol class="list-hot">
+    {foreach $top24 as $k=>$v}
+    {if $k<3}
+      <li class="hot"><span class="top-num num1">0{$k+1}</span><a href="news.php?articleId={$v.articleId}" target="_blank">{$v.title|truncate:22}</a></li>
+    {else}
+    <li><span class="top-num">{if $k < 9}0{/if}{$k+1}</span><a href="news.php?articleId={$v.articleId}" target="_blank">{$v.title|truncate:22}</a></li>
+    {/if}
+    {/foreach}
+        </ol>    
+  </div>
+</div>
+
+<!-- 网页的脚 -->
+{include file="footer.html"}
+
+</body>
+</html>
+
+
+
